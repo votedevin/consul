@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170519084239) do
+ActiveRecord::Schema.define(version: 20170608054328) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -223,6 +223,23 @@ ActiveRecord::Schema.define(version: 20170519084239) do
   add_index "comments", ["hidden_at"], name: "index_comments_on_hidden_at", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
+  create_table "conversations", force: :cascade do |t|
+    t.string   "title",                   null: false
+    t.text     "description"
+    t.string   "rss_url"
+    t.integer  "author_id"
+    t.datetime "hidden_at"
+    t.string   "polis_id",                null: false
+    t.integer  "views_count", default: 0, null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.tsvector "tsv"
+  end
+
+  add_index "conversations", ["author_id"], name: "index_conversations_on_author_id", using: :btree
+  add_index "conversations", ["hidden_at"], name: "index_conversations_on_hidden_at", using: :btree
+  add_index "conversations", ["tsv"], name: "index_conversations_on_tsv", using: :gin
+
   create_table "debates", force: :cascade do |t|
     t.string   "title",                        limit: 80
     t.text     "description"
@@ -232,10 +249,10 @@ ActiveRecord::Schema.define(version: 20170519084239) do
     t.string   "visit_id"
     t.datetime "hidden_at"
     t.integer  "flags_count",                             default: 0
+    t.datetime "ignored_flag_at"
     t.integer  "cached_votes_total",                      default: 0
     t.integer  "cached_votes_up",                         default: 0
     t.integer  "cached_votes_down",                       default: 0
-    t.datetime "ignored_flag_at"
     t.integer  "comments_count",                          default: 0
     t.datetime "confirmed_hide_at"
     t.integer  "cached_anonymous_votes_total",            default: 0
@@ -254,7 +271,6 @@ ActiveRecord::Schema.define(version: 20170519084239) do
   add_index "debates", ["cached_votes_total"], name: "index_debates_on_cached_votes_total", using: :btree
   add_index "debates", ["cached_votes_up"], name: "index_debates_on_cached_votes_up", using: :btree
   add_index "debates", ["confidence_score"], name: "index_debates_on_confidence_score", using: :btree
-  add_index "debates", ["description"], name: "index_debates_on_description", using: :btree
   add_index "debates", ["geozone_id"], name: "index_debates_on_geozone_id", using: :btree
   add_index "debates", ["hidden_at"], name: "index_debates_on_hidden_at", using: :btree
   add_index "debates", ["hot_score"], name: "index_debates_on_hot_score", using: :btree
@@ -350,7 +366,7 @@ ActiveRecord::Schema.define(version: 20170519084239) do
   create_table "locks", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "tries",        default: 0
-    t.datetime "locked_until", default: '2000-01-01 00:01:01', null: false
+    t.datetime "locked_until", default: '1999-12-31 20:01:01', null: false
     t.datetime "created_at",                                   null: false
     t.datetime "updated_at",                                   null: false
   end
@@ -606,7 +622,6 @@ ActiveRecord::Schema.define(version: 20170519084239) do
   add_index "proposals", ["author_id"], name: "index_proposals_on_author_id", using: :btree
   add_index "proposals", ["cached_votes_up"], name: "index_proposals_on_cached_votes_up", using: :btree
   add_index "proposals", ["confidence_score"], name: "index_proposals_on_confidence_score", using: :btree
-  add_index "proposals", ["description"], name: "index_proposals_on_description", using: :btree
   add_index "proposals", ["geozone_id"], name: "index_proposals_on_geozone_id", using: :btree
   add_index "proposals", ["hidden_at"], name: "index_proposals_on_hidden_at", using: :btree
   add_index "proposals", ["hot_score"], name: "index_proposals_on_hot_score", using: :btree
@@ -720,14 +735,15 @@ ActiveRecord::Schema.define(version: 20170519084239) do
   add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
 
   create_table "tags", force: :cascade do |t|
-    t.string  "name",                     limit: 40
-    t.integer "taggings_count",                      default: 0
-    t.boolean "featured",                            default: false
-    t.integer "debates_count",                       default: 0
-    t.integer "proposals_count",                     default: 0
-    t.integer "spending_proposals_count",            default: 0
+    t.string  "name",                                     limit: 40
+    t.integer "taggings_count",                                      default: 0
+    t.boolean "featured",                                            default: false
+    t.integer "debates_count",                                       default: 0
+    t.integer "proposals_count",                                     default: 0
+    t.integer "spending_proposals_count",                            default: 0
     t.string  "kind"
-    t.integer "budget/investments_count",            default: 0
+    t.integer "budget/investments_count",                            default: 0
+    t.integer "consul/conversations/conversations_count",            default: 0
   end
 
   add_index "tags", ["debates_count"], name: "index_tags_on_debates_count", using: :btree
@@ -814,7 +830,7 @@ ActiveRecord::Schema.define(version: 20170519084239) do
     t.boolean  "email_digest",                              default: true
     t.boolean  "email_on_direct_message",                   default: true
     t.boolean  "official_position_badge",                   default: false
-    t.datetime "password_changed_at",                       default: '2016-11-23 10:59:20', null: false
+    t.datetime "password_changed_at",                       default: '2017-06-05 18:40:41', null: false
     t.boolean  "created_from_signature",                    default: false
     t.integer  "failed_email_digests_count",                default: 0
     t.text     "former_users_data_log",                     default: ""
