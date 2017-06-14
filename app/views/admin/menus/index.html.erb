@@ -1,0 +1,31 @@
+<%= link_to 'Create menu item',
+             new_admin_menu_path, class: "button success float-right" %>
+
+<h2 class="inline-block">Menu items</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Url</th>
+      <th>Sort index</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @menus.each do |menu| %>
+      <tr id="<%= dom_id(menu) %>">
+        <td><%= menu.title %></td>
+        <td><%= menu.url %></td>
+        <td><%= menu.sort_index %></td>
+        <td>
+          <div style="float: right">
+            <%= link_to t("admin.menus.index.edit"), edit_admin_menu_path(menu), class: 'edit-banner button hollow' %>
+            <%= link_to t("admin.menus.index.delete"), admin_menu_path(menu), method: :delete, class: 'button hollow alert' %>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

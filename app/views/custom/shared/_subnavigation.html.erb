@@ -1,15 +1,5 @@
 <div class="small-12 medium-9 column">
   <ul>
-    <% if feature?(:debates) %>
-      <li>
-        <%= layout_menu_link_to t("layouts.header.debates"),
-                                debates_path,
-                                controller_name == 'debates',
-                                accesskey: "1",
-                                title: t("shared.go_to_page") + t("layouts.header.debates") %>
-      </li>
-    <% end %>
-
     <% if feature?(:conversations) %>
       <li>
         <%= layout_menu_link_to t("layouts.header.conversations"),
@@ -26,38 +16,10 @@
                                 accesskey: "2",
                                 title: t("shared.go_to_page") + t("layouts.header.proposals") %>
     </li>
-    <% if feature?(:polls) %>
+    <% Menu.order(:sort_index).each.with_index(3) do |menu, index| %>
       <li>
-        <%= layout_menu_link_to t("layouts.header.poll_questions"),
-                                  polls_path,
-                                  controller_name == "polls",
-                                  accesskey: "3",
-                                  title: t("shared.go_to_page") + t("layouts.header.poll_questions") %>
+        <%= link_to menu.title, menu.url, accesskey: index %>
       </li>
     <% end %>
-    <% if feature?(:spending_proposals) %>
-      <li>
-        <%= layout_menu_link_to t("layouts.header.spending_proposals"),
-                                  spending_proposals_path,
-                                  controller_name == 'spending_proposals',
-                                  accesskey: "s" %>
-      </li>
-    <% end %>
-    <% if feature?(:budgets) %>
-      <li>
-        <%= layout_menu_link_to t("layouts.header.budgets"),
-                                  budgets_path,
-                                  controller_name == "budgets" || controller_name == "investments",
-                                  accesskey: "4",
-                                  title: t("shared.go_to_page") + t("layouts.header.budgets") %>
-      </li>
-    <% end %>
-    <li>
-      <%= link_to t("layouts.header.more_info"),
-                    more_info_path,
-                    accesskey: "5",
-                    class: ("active" if current_page?(more_info_path)),
-                    title: t("shared.go_to_page") + t("layouts.header.more_info") %>
-    </li>
   </ul>
 </div>

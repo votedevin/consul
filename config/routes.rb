@@ -257,6 +257,7 @@ Rails.application.routes.draw do
     end
 
     resources :geozones, only: [:index, :new, :create, :edit, :update, :destroy]
+    resources :menus
 
     namespace :site_customization do
       resources :pages, except: [:show]

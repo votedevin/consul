@@ -167,6 +167,12 @@
       </li>
     <% end %>
 
+    <li class="section-title" <%= 'class=active' if controller_name == 'menus' %>>
+      <%= link_to admin_menus_path do %>
+        <strong>Manage menu items</strong>
+      <% end %>
+    </li>
+
     <li <%= "class=active" if controller_name == "newsletter" %>>
       <%= link_to admin_newsletters_path do %>
         <span class="icon-zip"></span>

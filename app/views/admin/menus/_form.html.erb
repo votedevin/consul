@@ -1,0 +1,24 @@
+<%= form_for [:admin, @menu] do |f| %>
+  <%= render 'errors' %>
+
+  <div clas="row">
+    <div class="small-12 medium-6 large-4 column">
+      <%= f.label :title %>
+      <%= f.text_field :title, label: false %>
+    </div>
+    <div class="small-12 medium-6 large-4 column">
+      <%= f.label :url  %>
+      <%= f.text_field :url, label: false %>
+    </div>
+    <div class="small-12 medium-6 large-2 column">
+      <%= f.label :sort_index %>
+      <%= f.text_field :sort_index, label: false %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="actions small-12 large-3 medium-3 column">
+      <%= f.submit(class: "button expanded", value: t("admin.geozones.edit.form.submit_button")) %>
+    </div>
+  </div>
+<% end %>
