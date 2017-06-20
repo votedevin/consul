@@ -5,7 +5,7 @@ class Verification::Residence
 
   attr_accessor :user, :document_number, :document_type, :date_of_birth, :postal_code, :terms_of_service
 
-  before_validation :call_census_api
+  #before_validation :call_census_api
 
   validates_presence_of :document_number
   validates_presence_of :document_type
@@ -33,7 +33,7 @@ class Verification::Residence
                 document_type:         document_type,
                 geozone:               self.geozone,
                 date_of_birth:         date_of_birth.to_datetime,
-                gender:                gender,
+                #gender:                gender,
                 residence_verified_at: Time.current)
   end
 
@@ -57,7 +57,8 @@ class Verification::Residence
   end
 
   def geozone
-    Geozone.where(census_code: district_code).first
+    #Geozone.where(census_code: district_code).first
+    nil
   end
 
   def district_code
