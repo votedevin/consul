@@ -5,4 +5,7 @@
 #
 
 gem 'consul-conversations', git: 'https://github.com/votedevin/consul-conversations.git', ref: '6d6db1881b53aab491c6bb95c9f8586d903d6bd8'
+gem 'twilio-ruby'
+gem 'dry-container'
+
 gem 'pry-byebug', group: [:development, :test]

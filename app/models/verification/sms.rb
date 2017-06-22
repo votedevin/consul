@@ -23,7 +23,10 @@ class Verification::Sms
   end
 
   def send_sms
-    SMSApi.new.sms_deliver(user.unconfirmed_phone, user.sms_confirmation_code)
+    Container['sms_api.send_sms'].call(
+      to: user.unconfirmed_phone,
+      body: user.sms_confirmation_code
+    )
   end
 
   def verified?
