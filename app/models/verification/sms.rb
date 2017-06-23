@@ -25,7 +25,7 @@ class Verification::Sms
   def send_sms
     Container['sms_api.send_sms'].call(
       to: user.unconfirmed_phone,
-      body: user.sms_confirmation_code
+      body: "Your verification code for nyspeaks.org is #{user.sms_confirmation_code}"
     )
   end
 
