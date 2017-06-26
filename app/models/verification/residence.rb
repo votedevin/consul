@@ -4,13 +4,17 @@ class Verification::Residence
   include ActiveModel::Validations::Callbacks
 
   attr_accessor :user, :document_number, :document_type, :date_of_birth, :postal_code, :terms_of_service
+  validates :address, presence: true
 
-  #before_validation :call_census_api
+  before_validation :call_census_api
 
-  validates_presence_of :document_number
-  validates_presence_of :document_type
-  validates_presence_of :date_of_birth
-  validates_presence_of :postal_code
+  REQUIRED_ATTRS = %i(
+    date_of_birth
+    postal_code
+    address
+  )
+
+  validates *REQUIRED_ATTRS, presence: true
   validates :terms_of_service, acceptance: { allow_nil: false }
   validates :postal_code, length: { is: 5 }
 
@@ -33,7 +37,7 @@ class Verification::Residence
                 document_type:         document_type,
                 geozone:               self.geozone,
                 date_of_birth:         date_of_birth.to_datetime,
-                #gender:                gender,
+                gender:                gender,
                 residence_verified_at: Time.current)
   end
 
@@ -57,8 +61,7 @@ class Verification::Residence
   end
 
   def geozone
-    #Geozone.where(census_code: district_code).first
-    nil
+    Geozone.where(census_code: district_code).first
   end
 
   def district_code
@@ -84,5 +87,4 @@ class Verification::Residence
     def clean_document_number
       self.document_number = self.document_number.gsub(/[^a-z0-9]+/i, "").upcase unless self.document_number.blank?
     end
-
 end
