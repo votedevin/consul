@@ -1,29 +1,22 @@
-
 require_dependency Rails.root.join('app', 'models', 'verification', 'residence').to_s
 
 class Verification::Residence
+  attr_accessor :address
 
-  #validate :postal_code_in_madrid
-  #validate :residence_in_madrid
+  def save
+    return false unless valid?
 
-  def postal_code_in_madrid
-    errors.add(:postal_code, I18n.t('verification.residence.new.error_not_allowed_postal_code')) unless valid_postal_code?
+    user.update(
+      address: address,
+      date_of_birth: date_of_birth.to_datetime,
+      residence_verified_at: Time.current)
   end
 
-  def residence_in_madrid
-    return if errors.any?
-
-    unless residency_valid?
-      errors.add(:residence_in_madrid, false)
-      store_failed_attempt
-      Lock.increase_tries(user)
-    end
+  def document_number_uniqueness
+    # no-op
   end
 
-  private
-
-    def valid_postal_code?
-      postal_code =~ /^280/
-    end
-
+  def call_census_api
+    # no-op
+  end
 end
