@@ -1,6 +1,6 @@
 module Consul
   class Application < Rails::Application
-    config.action_mailer.default_options = {from: 'no-reply@proposals.votedevin.com'.freeze}
+    config.action_mailer.default_options = {from: 'no-reply@proposals.nyspeaks.org'.freeze}
     config.action_mailer.delivery_method = :sendmail
 
     config.force_ssl = false
