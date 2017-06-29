@@ -32,7 +32,7 @@
         <li><span class="icon-check"></span>&nbsp;<%= t("verification.user_permission_debates") %></li>
         <li><span class="icon-check"></span>&nbsp;<%= t("verification.user_permission_proposal") %></li>
         <li><span class="icon-check"></span>&nbsp;<%= t("verification.user_permission_support_proposal") %></li>
-        <li><span class="icon-x"></span>&nbsp;<%= t("verification.user_permission_votes") %></li>
+        <!--<li><span class="icon-x"></span>&nbsp;<%= t("verification.user_permission_votes") %></li> -->
       </ul>
     </div>
 
@@ -48,7 +48,8 @@
       </div>
 
       <div class="small-12 medium-9 clear">
-        <%= f.label "Address" %>
+        <%= f.label "Registered Voter Address" %>
+        <p class="note">We use this address to determine which proposals to feature on your dashboard. <br />We also may send you mail to inform you of participation opportunities and to confirm your residence for future voting processes</p>
         <div class="medium-6">
           <%= f.text_field :address, label: false %>
         </div>
