@@ -10,13 +10,11 @@ class Verification::Residence
 
   REQUIRED_ATTRS = %i(
     date_of_birth
-    postal_code
     address
   )
 
   validates *REQUIRED_ATTRS, presence: true
   validates :terms_of_service, acceptance: { allow_nil: false }
-  validates :postal_code, length: { is: 5 }
 
   validate :allowed_age
   validate :document_number_uniqueness

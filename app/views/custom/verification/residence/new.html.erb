@@ -49,17 +49,9 @@
 
       <div class="small-12 medium-9 clear">
         <%= f.label "Registered Voter Address" %>
-        <p class="note">We use this address to determine which proposals to feature on your dashboard. <br />We also may send you mail to inform you of participation opportunities and to confirm your residence for future voting processes</p>
+        <p class="note">We use this address to determine which proposals to feature on your dashboard. <br />We also may send you mail to inform you of participation opportunities and to confirm your residence for future voting processes.</p>
         <div class="medium-6">
           <%= f.text_field :address, label: false %>
-        </div>
-      </div>
-
-      <div class="small-12 medium-5 clear">
-        <%= f.label t("verification.residence.new.postal_code") %>
-        <p class="note"><%= t("verification.residence.new.postal_code_note") %></p>
-        <div class="medium-6">
-          <%= f.text_field :postal_code, label: false %>
         </div>
       </div>
 
