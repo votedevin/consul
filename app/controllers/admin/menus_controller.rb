@@ -3,7 +3,7 @@ module Admin
     load_and_authorize_resource
 
     def index
-      @menus = @menus.order(:sort_index)
+      @menus = @menus.order(:sort_index).group_by(&:menu_type)
     end
 
     def create
@@ -32,7 +32,7 @@ module Admin
     private
 
     def menu_params
-      params.require(:menu).permit(:title, :url, :sort_index)
+      params.require(:menu).permit(:title, :url, :sort_index, :menu_type)
     end
   end
 end

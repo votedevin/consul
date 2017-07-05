@@ -14,18 +14,23 @@
   </thead>
 
   <tbody>
-    <% @menus.each do |menu| %>
-      <tr id="<%= dom_id(menu) %>">
-        <td><%= menu.title %></td>
-        <td><%= menu.url %></td>
-        <td><%= menu.sort_index %></td>
-        <td>
-          <div style="float: right">
-            <%= link_to t("admin.menus.index.edit"), edit_admin_menu_path(menu), class: 'edit-banner button hollow' %>
-            <%= link_to t("admin.menus.index.delete"), admin_menu_path(menu), method: :delete, class: 'button hollow alert' %>
-          </div>
-        </td>
+    <% @menus.each do |menu_type, menus| %>
+      <tr>
+        <th colspan="4"><%= menu_type %></th>
       </tr>
+      <% menus.each do |menu| %>
+        <tr id="<%= dom_id(menu) %>">
+          <td><%= menu.title %></td>
+          <td><%= menu.url %></td>
+          <td><%= menu.sort_index %></td>
+          <td>
+            <div style="float: right">
+              <%= link_to t("admin.menus.index.edit"), edit_admin_menu_path(menu), class: 'edit-banner button hollow' %>
+              <%= link_to t("admin.menus.index.delete"), admin_menu_path(menu), method: :delete, class: 'button hollow alert' %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>
