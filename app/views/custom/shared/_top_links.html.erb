@@ -1,0 +1,22 @@
+<ul class="no-bullet external-links">
+  <% Menu.by_type(:top_right_header).order(:sort_index).each do |item| %>
+    <li>
+      <%= link_to item.title,
+                  item.url,
+                  target: "_blank",
+                  rel: "nofollow" %>
+    </li>
+  <% end %>
+
+  <% if setting['blog_url'] %>
+    <li>
+      <%= link_to t("layouts.header.external_link_blog"),
+                  setting['blog_url'],
+                  target: "_blank",
+                  rel: "nofollow",
+                  title: t("shared.go_to_page") + t("layouts.header.external_link_blog") + t('shared.target_blank_html') %>
+    </li>
+  <% end %>
+
+  <%= raw content_block("top_links", I18n.locale) %>
+</ul>

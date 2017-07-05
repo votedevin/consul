@@ -1,14 +1,18 @@
 <%= form_for [:admin, @menu] do |f| %>
   <%= render 'errors' %>
 
-  <div clas="row">
-    <div class="small-12 medium-6 large-4 column">
+  <div class="row">
+    <div class="small-12 medium-6 large-3 column">
       <%= f.label :title %>
       <%= f.text_field :title, label: false %>
     </div>
-    <div class="small-12 medium-6 large-4 column">
+    <div class="small-12 medium-6 large-3 column">
       <%= f.label :url  %>
       <%= f.text_field :url, label: false %>
+    </div>
+    <div class="small-12 medium-6 large-4 column">
+      <%= f.label :menu_type %>
+      <%= f.select :menu_type, Menu::TYPES, label: false %>
     </div>
     <div class="small-12 medium-6 large-2 column">
       <%= f.label :sort_index %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170626052213) do
+ActiveRecord::Schema.define(version: 20170705052240) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -385,6 +385,7 @@ ActiveRecord::Schema.define(version: 20170626052213) do
     t.integer  "sort_index", default: 1
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.string   "menu_type",              null: false
   end
 
   create_table "moderators", force: :cascade do |t|
