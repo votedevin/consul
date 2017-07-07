@@ -189,6 +189,11 @@ describe Proposal do
         user = create(:user, residence_verified_at: Time.current, confirmed_phone: "666333111")
         expect {proposal.register_vote(user, 'yes')}.to change{proposal.reload.votes_for.size}.by(1)
       end
+
+      it 'registers vote for not full confirmed user' do
+        user = create(:user, residence_verified_at: Time.current)
+        expect {proposal.register_vote(user, 'yes')}.to change{proposal.reload.votes_for.size}.by(1)
+      end
     end
 
     describe "from level three verified users" do

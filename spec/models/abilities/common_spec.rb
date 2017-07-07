@@ -140,6 +140,15 @@ describe "Abilities::Common" do
     describe "Proposal" do
       it { should be_able_to(:vote, Proposal) }
       it { should be_able_to(:vote_featured, Proposal) }
+
+      context 'user with unconfirmed phone' do
+        let(:other_user) { create(:user, residence_verified_at: Time.current) }
+
+        subject(:ability) { Ability.new(other_user) }
+
+        it { expect(ability).to be_able_to(:vote, Proposal) }
+        it { expect(ability).to be_able_to(:vote_featured, Proposal) }
+      end
     end
 
     describe "Spending Proposal" do
