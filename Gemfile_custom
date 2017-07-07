@@ -4,7 +4,7 @@
 # * Spanish: https://github.com/consul/consul/blob/master/CUSTOMIZE_ES.md#gemfile
 #
 
-gem 'consul-conversations', git: 'https://github.com/votedevin/consul-conversations.git', ref: '6d6db1881b53aab491c6bb95c9f8586d903d6bd8'
+gem 'consul-conversations', git: 'https://github.com/votedevin/consul-conversations.git', ref: 'd29e1e314a73602ba553a4798953d717d58beae1'
 gem 'twilio-ruby'
 gem 'dry-container'
 

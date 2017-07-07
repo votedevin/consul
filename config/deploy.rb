@@ -41,11 +41,17 @@ set(:config_files, %w(
 set :whenever_roles, -> { :app }
 
 namespace :deploy do
+  task :restart_unicorn do
+    on roles(:app) do
+      execute "sudo /etc/init.d/unicorn_consul restart"
+    end
+  end
+
   before :starting, 'rvm1:install:rvm'  # install/update RVM
   before :starting, 'rvm1:install:ruby' # install Ruby and create gemset
   #before :starting, 'install_bundler_gem' # install bundler gem
 
-  after :publishing, 'deploy:restart'
+  after :publishing, 'deploy:restart_unicorn'
   after :published, 'delayed_job:restart'
 
   after :finishing, 'deploy:cleanup'
