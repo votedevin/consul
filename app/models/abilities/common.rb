@@ -39,10 +39,13 @@ module Abilities
         can :vote, Comment
       end
 
-      if user.level_two_or_three_verified?
+      if user.residence_verified? || user.level_two_or_three_verified?
         can :vote, Proposal
         can :vote_featured, Proposal
         can :vote, SpendingProposal
+      end
+
+      if user.level_two_or_three_verified?
         can :create, SpendingProposal
 
         can :create, Budget::Investment,               budget: { phase: "accepting" }
