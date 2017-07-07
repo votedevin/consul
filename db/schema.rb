@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170705052240) do
+ActiveRecord::Schema.define(version: 20170707055032) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -234,6 +234,7 @@ ActiveRecord::Schema.define(version: 20170705052240) do
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
     t.tsvector "tsv"
+    t.text     "excerpt"
   end
 
   add_index "conversations", ["author_id"], name: "index_conversations_on_author_id", using: :btree
