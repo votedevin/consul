@@ -1,0 +1,8 @@
+<div class="sidebar-divider"></div>
+<h2 class="sidebar-title"><%= t("shared.tags_cloud.districts") %></h2>
+<br>
+<%= link_to map_proposals_path, id: 'map', title: t("shared.tags_cloud.districts_list") do %>
+  <div data-zoom="9" class="g-map sidebar" id="js-g-map"></div>
+<% end %>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDUn2gVyKgMXh9Ix2_u35wiTmOtDom3rBo&callback=initMap"></script>

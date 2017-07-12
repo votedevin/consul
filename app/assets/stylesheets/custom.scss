@@ -6,4 +6,9 @@
 
 .g-map {
   height: 600px;
+
+  &.sidebar {
+    height: 400px;
+  }
 }
+
