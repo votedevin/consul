@@ -1,0 +1,46 @@
+<% content_for :canonical do %>
+  <%= render "shared/canonical", href: root_url %>
+<% end %>
+
+<div class="expanded highlight padding no-margin-top">
+  <div class="row">
+    <div class="small-12 medium-6 column">
+      <h1><%= t("layouts.header.open_city_title") %></h1>
+      <p>
+        <%= t("layouts.header.open_city_slogan_html") %>&nbsp;
+      </p>
+      <div class="small-12 medium-6">
+        <%= link_to 'Join a Conversation', conversations_path, class: "button see-more expanded" %>
+      </div>
+    </div>
+
+    <div class="hide-for-small-only small-12 medium-5 column text-center">
+      <%= image_tag(image_path_for("icon_home.png"), size: "330x240", alt:"") %>
+    </div>
+  </div>
+</div>
+
+<% cache [locale_and_user_status, @featured_debates, @featured_proposals, 'featured'] do %>
+  <main>
+    <div class="row text-center margin">
+      <div class="small-12 medium-3 column">
+        <h2>Conversations</h2>
+        <p>Share how you feel about important topics by posting statements and indicating whether you agree, disagree or don’t care about the statements of others. As you interact, you’re grouped with like-minded people.</p>
+
+      </div>
+      <div class="small-12 medium-3 column">
+        <h2>Proposals</h2>
+        <p>We provided like-minded groups online and offline spaces to collaborate on proposals for what politicians should do. You can also comment on proposals,  and support the proposals that you like most.</p>
+      </div>
+
+      <div class="small-12 medium-3 column">
+        <h2>Votes</h2>
+        <p>We work with the supporters of the most popular proposals to create list of points on consensus for what politicians should do. We then ask our entire community vote on each point.</p>
+      </div>
+      <div class="small-12 medium-3 column">
+        <h2>Actions</h2>
+        <p>Once we’ve arrived at points of consensus about what people want done, our “Civic Solutions Team” gets to work making it happened. Everything we do is documented so the public can follow our progress and learn how to get involved.</p>
+      </div>
+    </div>
+  </main>
+<% end %>
