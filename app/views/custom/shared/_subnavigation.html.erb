@@ -1,5 +1,14 @@
 <div class="small-12 medium-9 column">
   <ul>
+    <% Menu.by_type(:main_menu_first).order(:sort_index).each do |item| %>
+      <li>
+        <%= link_to item.title,
+          item.url,
+          target: "_blank",
+          rel: "nofollow" %>
+      </li>
+    <% end %>
+
     <% if feature?(:conversations) %>
       <li>
         <%= layout_menu_link_to t("layouts.header.conversations"),
