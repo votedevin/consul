@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
 
+  if Rails.env.development? || Rails.env.staging?
+    get '/sandbox' => 'sandbox#index'
+    get '/sandbox/*template' => 'sandbox#show'
+  end
+
   devise_for :users, controllers: {
                        registrations: 'users/registrations',
                        sessions: 'users/sessions',
@@ -73,7 +78,8 @@ Rails.application.routes.draw do
   resources :budgets, only: [:show, :index] do
     resources :groups, controller: "budgets/groups", only: [:show]
     resources :investments, controller: "budgets/investments", only: [:index, :new, :create, :show, :destroy] do
-      member { post :vote }
+      member     { post :vote }
+      collection { get :suggest }
     end
     resource :ballot, only: :show, controller: "budgets/ballots" do
       resources :lines, controller: "budgets/ballot/lines", only: [:create, :destroy]
@@ -87,9 +93,11 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :follows, only: [:create, :destroy]
+
   resources :stats, only: [:index]
 
-  resources :legislations, only: [:show]
+  resources :legacy_legislations, only: [:show], path: 'legislations'
 
   resources :annotations do
     get :search, on: :collection
@@ -98,6 +106,29 @@ Rails.application.routes.draw do
   resources :polls, only: [:show, :index] do
     resources :questions, only: [:show], controller: 'polls/questions', shallow: true do
       post :answer, on: :member
+    end
+  end
+
+  namespace :legislation do
+    resources :processes, only: [:index, :show] do
+      member do
+        get :debate
+        get :draft_publication
+        get :allegations
+        get :result_publication
+      end
+      resources :questions, only: [:show] do
+        resources :answers, only: [:create]
+      end
+      resources :draft_versions, only: [:show] do
+        get :go_to_version, on: :collection
+        get :changes
+        resources :annotations do
+          get :search, on: :collection
+          get :comments
+          post :new_comment
+        end
+      end
     end
   end
 
@@ -135,7 +166,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :users, only: [:index, :show] do
+    resources :hidden_users, only: [:index, :show] do
       member do
         put :restore
         put :confirm_hide
@@ -166,12 +197,17 @@ Rails.application.routes.draw do
     end
 
     resources :budgets do
+      member do
+        put :calculate_winners
+      end
+
       resources :budget_groups do
         resources :budget_headings do
         end
       end
 
       resources :budget_investments, only: [:index, :show, :edit, :update] do
+        resources :budget_investment_milestones
         member { patch :toggle_selection }
       end
     end
@@ -212,6 +248,8 @@ Rails.application.routes.draw do
       get :search, on: :collection
     end
 
+    resources :users, only: [:index, :show]
+
     scope module: :poll do
       resources :polls do
         get :search_questions, on: :member
@@ -250,6 +288,13 @@ Rails.application.routes.draw do
     resource :stats, only: :show do
       get :proposal_notifications, on: :collection
       get :direct_messages, on: :collection
+    end
+
+    namespace :legislation do
+      resources :processes do
+        resources :questions
+        resources :draft_versions
+      end
     end
 
     namespace :api do
@@ -356,7 +401,6 @@ Rails.application.routes.draw do
     resources :polls, only: [:index] do
       get :final, on: :collection
 
-      resources :recounts, only: [:new, :create]
       resources :final_recounts, only: [:new, :create]
       resources :results, only: [:new, :create, :index]
     end
@@ -365,18 +409,20 @@ Rails.application.routes.draw do
     root to: "dashboard#index"
   end
 
+  # GraphQL
+  get '/graphql', to: 'graphql#query'
+  post '/graphql', to: 'graphql#query'
+
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
 
-  mount Tolk::Engine => '/translate', :as => 'tolk'
+  mount GraphiQL::Rails::Engine, at: '/graphiql', graphql_path: '/graphql'
 
   # more info pages
   get 'more-information',                     to: 'pages#show', id: 'more_info/index',                as: 'more_info'
   get 'more-information/how-to-use',          to: 'pages#show', id: 'more_info/how_to_use/index',     as: 'how_to_use'
   get 'more-information/faq',                 to: 'pages#show', id: 'more_info/faq/index',            as: 'faq'
-  get 'more-information/participation/facts', to: 'pages#show', id: 'more_info/participation/facts',  as: 'participation_facts'
-  get 'more-information/participation/world', to: 'pages#show', id: 'more_info/participation/world',  as: 'participation_world'
 
   # static pages
   get '/blog' => redirect("http://blog.consul/")

@@ -78,6 +78,7 @@ Setting['feature.google_login'] = true
 Setting['feature.public_stats'] = true
 Setting['feature.budgets'] = true
 Setting['feature.signature_sheets'] = true
+Setting['feature.legislation'] = true
 
 # Spending proposals feature flags
 Setting['feature.spending_proposal_features.voting_allowed'] = nil
@@ -104,5 +105,5 @@ Setting['mailer_from_address'] = 'noreply@consul.dev'
 Setting['verification_offices_url'] = 'http://oficinas-atencion-ciudadano.url/'
 Setting['min_age_to_participate'] = 16
 
-# Proposal improvement url path ('more-information/proposal-improvement')
+# Proposal improvement url path ('/more-information/proposal-improvement')
 Setting['proposal_improvement_path'] = nil

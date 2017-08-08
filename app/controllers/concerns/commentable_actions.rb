@@ -34,7 +34,7 @@ module CommentableActions
 
   def suggest
     @limit = 5
-    @resources = @search_terms.present? ? resource_model.search(@search_terms) : nil
+    @resources = @search_terms.present? ? resource_relation.search(@search_terms) : nil
   end
 
   def create
@@ -88,11 +88,12 @@ module CommentableActions
     end
 
     def set_geozone
-      @resource.geozone = Geozone.find(params[resource_name.to_sym].try(:[], :geozone_id)) if params[resource_name.to_sym].try(:[], :geozone_id).present?
+      geozone_id = params[resource_name.to_sym].try(:[], :geozone_id)
+      @resource.geozone = Geozone.find(geozone_id) if geozone_id.present?
     end
 
     def load_categories
-      @categories = ActsAsTaggableOn::Tag.where("kind = 'category'").order(:name)
+      @categories = ActsAsTaggableOn::Tag.category.order(:name)
     end
 
     def parse_tag_filter
