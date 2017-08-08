@@ -1,5 +1,5 @@
 class Menu < ActiveRecord::Base
-  TYPES = %w(header top_right_header)
+  TYPES = %w(header top_right_header main_menu_first)
 
   validates :title, presence: true
   validates :url, presence: true
