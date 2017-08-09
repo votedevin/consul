@@ -1,7 +1,7 @@
 GIT
-  remote: https://github.com/votedevin/consul-conversations.git
-  revision: d29e1e314a73602ba553a4798953d717d58beae1
-  ref: d29e1e314a73602ba553a4798953d717d58beae1
+  remote: git://github.com/votedevin/consul-conversations.git
+  revision: 2a227a9c5b7120bd7a2d249e3bb143b555c93a42
+  ref: 2a227a9c5b7120bd7a2d249e3bb143b555c93a42
   specs:
     consul-conversations (0.1.0)
       cancancan
