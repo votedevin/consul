@@ -61,6 +61,8 @@ feature 'Proposals' do
     expect(page).to have_content I18n.l(proposal.created_at.to_date)
     expect(page).to have_selector(avatar(proposal.author.name))
     expect(page.html).to include "<title>#{proposal.title}</title>"
+    expect(page).not_to have_selector ".js-flag-actions"
+    expect(page).not_to have_selector ".js-follow"
 
     within('.social-share-button') do
       expect(page.all('a').count).to be(4) # Twitter, Facebook, Google+, Telegram
@@ -89,7 +91,7 @@ feature 'Proposals' do
     end
   end
 
-  context "Embedded video"  do
+  context "Embedded video" do
 
     scenario "Show YouTube video" do
       proposal = create(:proposal, video_url: "http://www.youtube.com/watch?v=a7UFm6ErMPU")
@@ -99,7 +101,7 @@ feature 'Proposals' do
     end
 
     scenario "Show Vimeo video" do
-      proposal = create(:proposal, video_url: "https://vimeo.com/7232823" )
+      proposal = create(:proposal, video_url: "https://vimeo.com/7232823")
       visit proposal_path(proposal)
       expect(page).to have_selector("div[id='js-embedded-video']")
       expect(page.html).to include 'https://player.vimeo.com/video/7232823'
@@ -157,7 +159,7 @@ feature 'Proposals' do
   end
 
   scenario 'Create with proposal improvement info link' do
-    Setting['proposal_improvement_path'] = 'more-information/proposal-improvement'
+    Setting['proposal_improvement_path'] = '/more-information/proposal-improvement'
     author = create(:user)
     login_as(author)
 
@@ -175,7 +177,7 @@ feature 'Proposals' do
     click_button 'Create proposal'
 
     expect(page).to have_content 'Proposal created successfully.'
-    expect(page).to have_content 'You can also see more information about improving your campaign'
+    expect(page).to have_content 'Improve your campaign and get more supports'
 
     click_link 'Not now, go to my proposal'
 
@@ -331,13 +333,14 @@ feature 'Proposals' do
 
   scenario 'JS injection is prevented but autolinking is respected' do
     author = create(:user)
+    js_injection_string = "<script>alert('hey')</script> <a href=\"javascript:alert('surprise!')\">click me<a/> http://example.org"
     login_as(author)
 
     visit new_proposal_path
     fill_in 'proposal_title', with: 'Testing auto link'
     fill_in 'proposal_question', with: 'Should I stay or should I go?'
     fill_in 'proposal_summary', with: 'In summary, what we want is...'
-    fill_in 'proposal_description', with: "<script>alert('hey')</script> <a href=\"javascript:alert('surprise!')\">click me<a/> http://example.org"
+    fill_in 'proposal_description', with: js_injection_string
     fill_in 'proposal_responsible_name', with: 'Isabel Garcia'
     check 'proposal_terms_of_service'
 
@@ -536,6 +539,7 @@ feature 'Proposals' do
     expect(current_path).not_to eq(edit_proposal_path(proposal))
     expect(current_path).to eq(proposals_path)
     expect(page).to have_content 'You do not have permission'
+    Setting["max_votes_for_proposal_edit"] = 1000
   end
 
   scenario 'Update should be posible for the author of an editable proposal' do
@@ -1024,7 +1028,7 @@ feature 'Proposals' do
           click_link "Advanced search"
           select "Customized", from: "js-advanced-search-date-min"
           fill_in "advanced_search_date_min", with: 7.days.ago
-          fill_in "advanced_search_date_max", with: 1.days.ago
+          fill_in "advanced_search_date_max", with: 1.day.ago
           click_button "Filter"
 
           expect(page).to have_content("There are 2 citizen proposals")
@@ -1071,7 +1075,7 @@ feature 'Proposals' do
           click_link "Advanced search"
           fill_in "Write the text", with: "Schwifty"
           select Setting['official_level_1_name'], from: "advanced_search_official_level"
-          select "Last 24 hours",   from: "js-advanced-search-date-min"
+          select "Last 24 hours", from: "js-advanced-search-date-min"
 
           click_button "Filter"
 
@@ -1107,7 +1111,7 @@ feature 'Proposals' do
 
           select "Customized", from: "js-advanced-search-date-min"
           fill_in "advanced_search_date_min", with: 7.days.ago.to_date
-          fill_in "advanced_search_date_max", with: 1.days.ago.to_date
+          fill_in "advanced_search_date_max", with: 1.day.ago.to_date
           click_button "Filter"
 
           expect(page).to have_content("citizen proposals cannot be found")
@@ -1221,6 +1225,8 @@ feature 'Proposals' do
 
     expect(Flag.flagged?(user, proposal)).to_not be
   end
+
+  it_behaves_like "followable", "proposal", "proposal_path", { "id": "id" }
 
   scenario 'Erased author' do
     user = create(:user)
@@ -1344,8 +1350,8 @@ feature 'Proposals' do
   context "Summary" do
 
     scenario "Displays proposals grouped by category" do
-      create(:tag, kind: 'category', name: 'Culture')
-      create(:tag, kind: 'category', name: 'Social Services')
+      create(:tag, :category, name: 'Culture')
+      create(:tag, :category, name: 'Social Services')
 
       3.times { create(:proposal, tag_list: 'Culture') }
       3.times { create(:proposal, tag_list: 'Social Services') }
@@ -1388,7 +1394,7 @@ feature 'Proposals' do
     end
 
     scenario "Displays a maximum of 3 proposals per category" do
-      create(:tag, kind: 'category', name: 'culture')
+      create(:tag, :category, name: 'culture')
       4.times { create(:proposal, tag_list: 'culture') }
 
       visit summary_proposals_path
@@ -1397,7 +1403,7 @@ feature 'Proposals' do
     end
 
     scenario "Orders proposals by votes" do
-      create(:tag, kind: 'category', name: 'culture')
+      create(:tag, :category, name: 'culture')
       create(:proposal, title: 'Best',   tag_list: 'culture').update_column(:confidence_score, 10)
       create(:proposal, title: 'Worst',  tag_list: 'culture').update_column(:confidence_score, 2)
       create(:proposal, title: 'Medium', tag_list: 'culture').update_column(:confidence_score, 5)
@@ -1409,7 +1415,7 @@ feature 'Proposals' do
     end
 
     scenario "Displays proposals from last week" do
-      create(:tag, kind: 'category', name: 'culture')
+      create(:tag, :category, name: 'culture')
       proposal1 = create(:proposal, tag_list: 'culture', created_at: 1.day.ago)
       proposal2 = create(:proposal, tag_list: 'culture', created_at: 5.days.ago)
       proposal3 = create(:proposal, tag_list: 'culture', created_at: 8.days.ago)
@@ -1430,21 +1436,6 @@ feature 'Proposals' do
 end
 
 feature 'Successful proposals' do
-
-  scenario 'Banner shows in proposal index' do
-    create_featured_proposals
-
-    visit proposals_path
-    expect(page).to_not have_css("#next-voting")
-    expect(page).to have_css("#featured-proposals")
-
-    create_successful_proposals
-
-    visit proposals_path
-
-    expect(page).to have_css("#next-voting")
-    expect(page).to_not have_css("#featured-proposals")
-  end
 
   scenario 'Successful proposals do not show support buttons in index' do
     successful_proposals = create_successful_proposals
