@@ -19,6 +19,10 @@
         <strong><%= t("admin.menu.title_moderated_content") %></strong>
       </a>
       <ul <%= "class=is-active" if menu_moderated_content? %>>
+        <li <%= "class=active" if controller_name == "conversations" %>>
+          <%= link_to t("admin.menu.hidden_conversations"), admin_conversations_path %>
+        </li>
+
         <li <%= "class=active" if controller_name == "proposals" %>>
           <%= link_to t("admin.menu.hidden_proposals"), admin_proposals_path %>
         </li>

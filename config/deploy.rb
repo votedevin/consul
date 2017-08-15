@@ -43,7 +43,7 @@ set :whenever_roles, -> { :app }
 namespace :deploy do
   task :restart_unicorn do
     on roles(:app) do
-      execute "sudo /etc/init.d/unicorn_consul restart"
+      execute "sudo /etc/init.d/unicorn_consul reload"
     end
   end
 
