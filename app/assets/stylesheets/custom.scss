@@ -12,3 +12,10 @@
   }
 }
 
+@media screen and (min-width: 40em) {
+  .top-bar .top-bar-title a img {
+    height: 70px !important;
+    width: 70px !important;
+    margin-top: 7px;
+  }
+}
